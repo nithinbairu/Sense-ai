@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header"
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import HeroSection from "@/components/hero";
 
 const inter=Inter({subsets:["latin"]});
 
@@ -37,8 +38,7 @@ export default function RootLayout({ children }) {
               </div>
             </footer>
           </ThemeProvider>
-        </body>
-        
+        </body> 
       </html>
       </ClerkProvider>
   );
