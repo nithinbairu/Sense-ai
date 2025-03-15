@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ChevronDown, GraduationCap, FileText, LayoutDashboard, PenBox, StarIcon } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
+import { checkUser } from '@/lib/checkUser'
 
-const Header = () => {
+const Header = async () => {
+  await checkUser();
   return (
     <header className='fixed top-0 w-full border-b 
       bg-background/80 backdrop-blur-md z-50
