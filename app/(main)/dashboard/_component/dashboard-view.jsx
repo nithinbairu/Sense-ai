@@ -8,7 +8,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import {
@@ -29,39 +28,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
-
 const DashboardView = ({ insights }) => {
-  
-  const salaryData = [
-    { name: 'Software Engineer', min: 70, median: 100, max: 150 },
-    { name: 'Data Scientist', min: 80, median: 110, max: 160 },
-    { name: 'Product Manager', min: 90, median: 130, max: 180 },
-    { name: 'UI/UX Designer', min: 60, median: 90, max: 130 }
-  ];
-  
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white border border-gray-300 p-3 rounded-lg shadow-md">
-          <p className="font-semibold text-gray-800">{label}</p>
-          {payload.map((item) => (
-            <p key={item.name} className="text-sm text-gray-600">
-              <span style={{ color: item.color, fontWeight: 'bold' }}>{item.name}:</span> ${item.value}K
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-  
   // Transform salary data for the chart
-  // const salaryData = insights.salaryRanges.map((range) => ({
-  //   name: range.role,
-  //   min: range.min / 1000,
-  //   max: range.max / 1000,
-  //   median: range.median / 1000,
-  // }));
+  const salaryData = insights.salaryRanges.map((range) => ({
+    name: range.role,
+    min: range.min / 1000,
+    max: range.max / 1000,
+    median: range.median / 1000,
+  }));
 
   const getDemandLevelColor = (level) => {
     switch (level.toLowerCase()) {
@@ -171,27 +145,44 @@ const DashboardView = ({ insights }) => {
 
       {/* Salary Ranges Chart */}
       <Card className="col-span-4">
-      <CardHeader>
-        <CardTitle>Salary Ranges by Role</CardTitle>
-        <CardDescription>Displaying minimum, median, and maximum salaries (in thousands)</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[400px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={salaryData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5} />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis tickFormatter={(value) => `$${value}K`} tick={{ fontSize: 12 }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ fontSize: '12px' }} />
-              <Bar dataKey="min" fill="#93c5fd" name="Min Salary (K)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="median" fill="#3b82f6" name="Median Salary (K)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="max" fill="#1e40af" name="Max Salary (K)" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+        <CardHeader>
+          <CardTitle>Salary Ranges by Role</CardTitle>
+          <CardDescription>
+            Displaying minimum, median, and maximum salaries (in thousands)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={salaryData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-background border rounded-lg p-2 shadow-md">
+                          <p className="font-medium">{label}</p>
+                          {payload.map((item) => (
+                            <p key={item.name} className="text-sm">
+                              {item.name}: ${item.value}K
+                            </p>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Bar dataKey="min" fill="#94a3b8" name="Min Salary (K)" />
+                <Bar dataKey="median" fill="#64748b" name="Median Salary (K)" />
+                <Bar dataKey="max" fill="#475569" name="Max Salary (K)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Industry Trends */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
